@@ -4,9 +4,11 @@ import {
   Delete,
   Get,
   Param,
+  ParseUUIDPipe,
   Post,
   Put,
   UseInterceptors,
+  ValidationPipe,
 } from '@nestjs/common';
 import { HttpCode } from '@nestjs/common/decorators/http/http-code.decorator';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -20,7 +22,7 @@ export class UserController {
 
   @Post()
   @UseInterceptors(UserPasswordInterceptor)
-  create(@Body() createUserDto: CreateUserDto) {
+  create(@Body(new ValidationPipe()) createUserDto: CreateUserDto) {
     return this.userService.create(createUserDto);
   }
 
@@ -32,22 +34,22 @@ export class UserController {
 
   @Get(':id')
   @UseInterceptors(UserPasswordInterceptor)
-  findOne(@Param('id') id: string) {
+  findOne(@Param('id', ParseUUIDPipe) id: string) {
     return this.userService.findOne(id);
   }
 
   @Put(':id')
   @UseInterceptors(UserPasswordInterceptor)
   update(
-    @Param('id') id: string,
-    @Body() updatePasswordDto: UpdatePasswordDto,
+    @Param('id', ParseUUIDPipe) id: string,
+    @Body(new ValidationPipe()) updatePasswordDto: UpdatePasswordDto,
   ) {
     return this.userService.update(id, updatePasswordDto);
   }
 
   @Delete(':id')
   @HttpCode(204)
-  remove(@Param('id') id: string) {
+  remove(@Param('id', ParseUUIDPipe) id: string) {
     return this.userService.remove(id);
   }
 }

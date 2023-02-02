@@ -1,13 +1,13 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { ERROR_MESSAGES } from 'src/constants';
-import { validate as uuidValidate, v4 as uuidv4 } from 'uuid';
+import { v4 as uuidv4 } from 'uuid';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdatePasswordDto } from './dto/update-user.dto';
 import { User } from './user.interface';
 
 @Injectable()
 export class UserService {
-  private readonly users: User[] = [];
+  private users: User[] = [];
 
   create(createUserDto: CreateUserDto) {
     const timestamp = Date.now();
@@ -29,10 +29,6 @@ export class UserService {
   }
 
   findOne(id: string) {
-    const isValid = uuidValidate(id);
-    if (!isValid) {
-      throw new HttpException(ERROR_MESSAGES.invalidID, HttpStatus.BAD_REQUEST);
-    }
     const user = this.users.find((user) => user.id === id);
     if (!user) {
       throw new HttpException(
@@ -44,12 +40,14 @@ export class UserService {
   }
 
   update(id: string, updatePasswordDto: UpdatePasswordDto) {
-    const isValid = uuidValidate(id);
-    if (!isValid) {
-      throw new HttpException(ERROR_MESSAGES.invalidID, HttpStatus.BAD_REQUEST);
-    }
-
     const user = this.users.find((user) => user.id === id);
+
+    if (!user) {
+      throw new HttpException(
+        ERROR_MESSAGES.userNotFound,
+        HttpStatus.NOT_FOUND,
+      );
+    }
 
     if (user.password !== updatePasswordDto.oldPassword) {
       throw new HttpException(
@@ -67,10 +65,6 @@ export class UserService {
   }
 
   remove(id: string) {
-    const isValid = uuidValidate(id);
-    if (!isValid) {
-      throw new HttpException(ERROR_MESSAGES.invalidID, HttpStatus.BAD_REQUEST);
-    }
     const user = this.users.find((user) => user.id === id);
     if (!user) {
       throw new HttpException(
@@ -78,6 +72,6 @@ export class UserService {
         HttpStatus.NOT_FOUND,
       );
     }
-    this.users.filter((user) => user.id === id);
+    this.users = this.users.filter((user) => user.id !== id);
   }
 }
