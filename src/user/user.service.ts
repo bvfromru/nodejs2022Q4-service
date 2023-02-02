@@ -1,5 +1,6 @@
-import { Injectable } from '@nestjs/common';
-import { v4 as uuidv4 } from 'uuid';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { ERROR_MESSAGES } from 'src/constants';
+import { validate as uuidValidate, v4 as uuidv4 } from 'uuid';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdatePasswordDto } from './dto/update-user.dto';
 import { User } from './user.interface';
@@ -28,13 +29,36 @@ export class UserService {
   }
 
   findOne(id: string) {
+    const isValid = uuidValidate(id);
+    if (!isValid) {
+      throw new HttpException(ERROR_MESSAGES.invalidID, HttpStatus.BAD_REQUEST);
+    }
     const user = this.users.find((user) => user.id === id);
-    if (user) return user;
+    if (!user) {
+      throw new HttpException(
+        ERROR_MESSAGES.userNotFound,
+        HttpStatus.NOT_FOUND,
+      );
+    }
+    return user;
   }
 
   update(id: string, updatePasswordDto: UpdatePasswordDto) {
-    const timestamp = Date.now();
+    const isValid = uuidValidate(id);
+    if (!isValid) {
+      throw new HttpException(ERROR_MESSAGES.invalidID, HttpStatus.BAD_REQUEST);
+    }
+
     const user = this.users.find((user) => user.id === id);
+
+    if (user.password !== updatePasswordDto.oldPassword) {
+      throw new HttpException(
+        ERROR_MESSAGES.wrongPassword,
+        HttpStatus.FORBIDDEN,
+      );
+    }
+
+    const timestamp = Date.now();
     user.password = updatePasswordDto.newPassword;
     user.version = user.version + 1;
     user.updatedAt = timestamp;
@@ -43,6 +67,17 @@ export class UserService {
   }
 
   remove(id: string) {
+    const isValid = uuidValidate(id);
+    if (!isValid) {
+      throw new HttpException(ERROR_MESSAGES.invalidID, HttpStatus.BAD_REQUEST);
+    }
+    const user = this.users.find((user) => user.id === id);
+    if (!user) {
+      throw new HttpException(
+        ERROR_MESSAGES.userNotFound,
+        HttpStatus.NOT_FOUND,
+      );
+    }
     this.users.filter((user) => user.id === id);
   }
 }
