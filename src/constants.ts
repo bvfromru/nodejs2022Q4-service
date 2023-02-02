@@ -4,4 +4,5 @@ export const ERROR_MESSAGES = {
   userNotFound: 'User not found',
   artistNotFound: 'Artist not found',
   trackNotFound: 'Track not found',
+  albumNotFound: 'Album not found',
 };
