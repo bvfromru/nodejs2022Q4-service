@@ -34,7 +34,7 @@ export class ArtistService {
   }
 
   update(id: string, updateArtistDto: UpdateArtistDto) {
-    const artist = this.artists.find((artist) => artist.id === id);
+    let artist = this.artists.find((artist) => artist.id === id);
 
     if (!artist) {
       throw new HttpException(
@@ -42,8 +42,8 @@ export class ArtistService {
         HttpStatus.NOT_FOUND,
       );
     }
-    artist.grammy = updateArtistDto.grammy;
-    artist.name = updateArtistDto.name;
+    const { name, grammy } = updateArtistDto;
+    artist = { ...artist, name, grammy };
     return artist;
   }
 

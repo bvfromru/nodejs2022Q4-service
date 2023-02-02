@@ -1,6 +1,7 @@
 export const ERROR_MESSAGES = {
   invalidID: 'Invalid ID',
-  userNotFound: 'User not found',
   wrongPassword: 'Wrong password',
+  userNotFound: 'User not found',
   artistNotFound: 'Artist not found',
+  trackNotFound: 'Track not found',
 };
