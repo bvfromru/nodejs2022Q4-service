@@ -61,7 +61,6 @@ export class UserService {
     user.version = user.version + 1;
     user.updatedAt = timestamp;
     return user;
-    // return db.users.updatePassword(updatePasswordDto);
   }
 
   // update(id: string, updatePasswordDto: UpdatePasswordDto) {
@@ -92,7 +91,6 @@ export class UserService {
   //     updatedAt: timestamp,
   //   };
   //   return user;
-  //   // return db.users.updatePassword(updatePasswordDto);
   // }
 
   remove(id: string) {

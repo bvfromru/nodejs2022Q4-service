@@ -7,7 +7,16 @@ import { UpdateAlbumDto } from './dto/update-album.dto';
 
 @Injectable()
 export class AlbumService {
-  private albums: Album[] = [];
+  // constructor(
+  //   @Inject(forwardRef(() => FavsService))
+  //   @Inject(forwardRef(() => ArtistService))
+  //   @Inject(forwardRef(() => TrackService))
+  //   private readonly favsService: FavsService,
+  //   private readonly trackService: TrackService,
+  //   private readonly artistService: ArtistService,
+  // ) {}
+
+  public albums: Album[] = [];
   create(createAlbumDto: CreateAlbumDto) {
     const album: Album = {
       ...createAlbumDto,

@@ -7,7 +7,15 @@ import { Track } from './track.interface';
 
 @Injectable()
 export class TrackService {
-  private tracks: Track[] = [];
+  // constructor(
+  //   @Inject(forwardRef(() => ArtistService))
+  //   @Inject(forwardRef(() => FavsService))
+  //   @Inject(forwardRef(() => AlbumService))
+  //   private readonly albumService: AlbumService,
+  //   private readonly artistService: ArtistService,
+  //   private readonly favsService: FavsService,
+  // ) {}
+  public tracks: Track[] = [];
 
   create(createTrackDto: CreateTrackDto) {
     const track: Track = {

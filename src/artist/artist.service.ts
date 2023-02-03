@@ -7,7 +7,15 @@ import { UpdateArtistDto } from './dto/update-artist.dto';
 
 @Injectable()
 export class ArtistService {
-  private artists: Artist[] = [];
+  // constructor(
+  //   @Inject(forwardRef(() => AlbumService))
+  //   @Inject(forwardRef(() => TrackService))
+  //   @Inject(forwardRef(() => FavsService))
+  //   private readonly albumService: AlbumService,
+  //   private readonly trackService: TrackService,
+  //   private readonly favsService: FavsService,
+  // ) {}
+  public artists: Artist[] = [];
 
   create(createArtistDto: CreateArtistDto) {
     const artist: Artist = {
@@ -55,6 +63,17 @@ export class ArtistService {
         HttpStatus.NOT_FOUND,
       );
     }
-    this.artists = this.artists.filter((artist) => artist.id !== id);
+    // this.albumService.albums.forEach((album) => {
+    //   if (album.artistId === id) {
+    //     album.artistId = null;
+    //   }
+    // });
+    // this.trackService.tracks.forEach((track) => {
+    //   if (track.artistId === id) {
+    //     track.artistId = null;
+    //   }
+    // });
+    // this.favsService.removeTrack(id);
+    // this.artists = this.artists.filter((artist) => artist.id !== id);
   }
 }

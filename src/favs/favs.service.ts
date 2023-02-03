@@ -1,4 +1,5 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
+import { forwardRef } from '@nestjs/common/utils';
 import { AlbumService } from 'src/album/album.service';
 import { ArtistService } from 'src/artist/artist.service';
 import { ERROR_MESSAGES, SUCCESS_MESSAGES } from 'src/constants';
@@ -8,6 +9,9 @@ import { Favorites } from './favs.interface';
 @Injectable()
 export class FavsService {
   constructor(
+    @Inject(forwardRef(() => ArtistService))
+    @Inject(forwardRef(() => AlbumService))
+    @Inject(forwardRef(() => TrackService))
     private readonly albumService: AlbumService,
     private readonly trackService: TrackService,
     private readonly artistService: ArtistService,

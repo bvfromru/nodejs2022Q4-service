@@ -8,6 +8,7 @@ import { FavsService } from './favs.service';
 @Module({
   controllers: [FavsController],
   providers: [FavsService],
-  imports: [AlbumModule, ArtistModule, TrackModule],
+  imports: [TrackModule, ArtistModule, AlbumModule],
+  // exports: [FavsService],
 })
 export class FavsModule {}
