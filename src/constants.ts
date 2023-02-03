@@ -1,3 +1,5 @@
+export const DEFAULT_PORT = 4000;
+
 export const ERROR_MESSAGES = {
   invalidID: 'Invalid ID',
   wrongPassword: 'Wrong password',
