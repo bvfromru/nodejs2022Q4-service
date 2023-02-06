@@ -14,7 +14,6 @@ import {
 import { HttpCode } from '@nestjs/common/decorators/http/http-code.decorator';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdatePasswordDto } from './dto/update-user.dto';
-// import { UserPasswordInterceptor } from './user.interceptor';
 import { UserEntity } from './entities/user.entity';
 import { UserService } from './user.service';
 
