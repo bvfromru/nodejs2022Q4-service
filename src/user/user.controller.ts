@@ -1,5 +1,6 @@
 import {
   Body,
+  ClassSerializerInterceptor,
   Controller,
   Delete,
   Get,
@@ -13,38 +14,36 @@ import {
 import { HttpCode } from '@nestjs/common/decorators/http/http-code.decorator';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdatePasswordDto } from './dto/update-user.dto';
-import { UserPasswordInterceptor } from './user.interceptor';
+// import { UserPasswordInterceptor } from './user.interceptor';
+import { UserEntity } from './entities/user.entity';
 import { UserService } from './user.service';
 
+@UseInterceptors(ClassSerializerInterceptor)
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Post()
-  @UseInterceptors(UserPasswordInterceptor)
-  create(@Body(new ValidationPipe()) createUserDto: CreateUserDto) {
-    return this.userService.create(createUserDto);
+  create(@Body(new ValidationPipe()) createUserDto: CreateUserDto): UserEntity {
+    return new UserEntity(this.userService.create(createUserDto));
   }
 
   @Get()
-  @UseInterceptors(UserPasswordInterceptor)
-  findAll() {
-    return this.userService.findAll();
+  findAll(): UserEntity[] {
+    return this.userService.findAll().map((user) => new UserEntity(user));
   }
 
   @Get(':id')
-  @UseInterceptors(UserPasswordInterceptor)
-  findOne(@Param('id', ParseUUIDPipe) id: string) {
-    return this.userService.findOne(id);
+  findOne(@Param('id', ParseUUIDPipe) id: string): UserEntity {
+    return new UserEntity(this.userService.findOne(id));
   }
 
   @Put(':id')
-  @UseInterceptors(UserPasswordInterceptor)
   update(
     @Param('id', ParseUUIDPipe) id: string,
     @Body(new ValidationPipe()) updatePasswordDto: UpdatePasswordDto,
-  ) {
-    return this.userService.update(id, updatePasswordDto);
+  ): UserEntity {
+    return new UserEntity(this.userService.update(id, updatePasswordDto));
   }
 
   @Delete(':id')
