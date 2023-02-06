@@ -1,11 +1,11 @@
-import { request } from './lib';
 import { StatusCodes } from 'http-status-codes';
-import { albumsRoutes, artistsRoutes, tracksRoutes } from './endpoints';
 import { validate } from 'uuid';
+import { albumsRoutes, artistsRoutes, tracksRoutes } from './endpoints';
+import { request } from './lib';
 import {
   getTokenAndUserId,
-  shouldAuthorizationBeTested,
   removeTokenUser,
+  shouldAuthorizationBeTested,
 } from './utils';
 
 const createAlbumDto = {

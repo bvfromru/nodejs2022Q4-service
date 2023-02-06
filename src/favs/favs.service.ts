@@ -9,15 +9,15 @@ import { Favorites } from './favs.interface';
 @Injectable()
 export class FavsService {
   constructor(
-    @Inject(forwardRef(() => ArtistService))
     @Inject(forwardRef(() => AlbumService))
-    @Inject(forwardRef(() => TrackService))
     private readonly albumService: AlbumService,
-    private readonly trackService: TrackService,
+    @Inject(forwardRef(() => ArtistService))
     private readonly artistService: ArtistService,
+    @Inject(forwardRef(() => TrackService))
+    private readonly trackService: TrackService,
   ) {}
 
-  private favs: Favorites = {
+  public favs: Favorites = {
     artists: [],
     albums: [],
     tracks: [],

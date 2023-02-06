@@ -1,5 +1,14 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import {
+  HttpException,
+  HttpStatus,
+  Inject,
+  Injectable,
+  forwardRef,
+} from '@nestjs/common';
+import { AlbumService } from 'src/album/album.service';
 import { ERROR_MESSAGES } from 'src/constants';
+import { FavsService } from 'src/favs/favs.service';
+import { TrackService } from 'src/track/track.service';
 import { v4 as uuidv4 } from 'uuid';
 import { Artist } from './artist.interface';
 import { CreateArtistDto } from './dto/create-artist.dto';
@@ -7,14 +16,14 @@ import { UpdateArtistDto } from './dto/update-artist.dto';
 
 @Injectable()
 export class ArtistService {
-  // constructor(
-  //   @Inject(forwardRef(() => AlbumService))
-  //   @Inject(forwardRef(() => TrackService))
-  //   @Inject(forwardRef(() => FavsService))
-  //   private readonly albumService: AlbumService,
-  //   private readonly trackService: TrackService,
-  //   private readonly favsService: FavsService,
-  // ) {}
+  constructor(
+    @Inject(forwardRef(() => AlbumService))
+    private readonly albumService: AlbumService,
+    @Inject(forwardRef(() => TrackService))
+    private readonly trackService: TrackService,
+    @Inject(forwardRef(() => FavsService))
+    private readonly favsService: FavsService,
+  ) {}
   public artists: Artist[] = [];
 
   create(createArtistDto: CreateArtistDto) {
@@ -63,17 +72,19 @@ export class ArtistService {
         HttpStatus.NOT_FOUND,
       );
     }
-    // this.albumService.albums.forEach((album) => {
-    //   if (album.artistId === id) {
-    //     album.artistId = null;
-    //   }
-    // });
-    // this.trackService.tracks.forEach((track) => {
-    //   if (track.artistId === id) {
-    //     track.artistId = null;
-    //   }
-    // });
-    // this.favsService.removeTrack(id);
-    // this.artists = this.artists.filter((artist) => artist.id !== id);
+    this.albumService.albums.forEach((album) => {
+      if (album.artistId === id) {
+        album.artistId = null;
+      }
+    });
+    this.trackService.tracks.forEach((track) => {
+      if (track.artistId === id) {
+        track.artistId = null;
+      }
+    });
+    if (this.favsService.favs.artists.includes(id)) {
+      this.favsService.removeArtist(id);
+    }
+    this.artists = this.artists.filter((artist) => artist.id !== id);
   }
 }

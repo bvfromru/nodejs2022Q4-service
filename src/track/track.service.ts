@@ -1,5 +1,14 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import {
+  HttpException,
+  HttpStatus,
+  Inject,
+  Injectable,
+  forwardRef,
+} from '@nestjs/common';
+import { AlbumService } from 'src/album/album.service';
+import { ArtistService } from 'src/artist/artist.service';
 import { ERROR_MESSAGES } from 'src/constants';
+import { FavsService } from 'src/favs/favs.service';
 import { v4 as uuidv4 } from 'uuid';
 import { CreateTrackDto } from './dto/create-track.dto';
 import { UpdateTrackDto } from './dto/update-track.dto';
@@ -7,14 +16,14 @@ import { Track } from './track.interface';
 
 @Injectable()
 export class TrackService {
-  // constructor(
-  //   @Inject(forwardRef(() => ArtistService))
-  //   @Inject(forwardRef(() => FavsService))
-  //   @Inject(forwardRef(() => AlbumService))
-  //   private readonly albumService: AlbumService,
-  //   private readonly artistService: ArtistService,
-  //   private readonly favsService: FavsService,
-  // ) {}
+  constructor(
+    @Inject(forwardRef(() => ArtistService))
+    private readonly artistService: ArtistService,
+    @Inject(forwardRef(() => FavsService))
+    private readonly favsService: FavsService,
+    @Inject(forwardRef(() => AlbumService))
+    private readonly albumService: AlbumService,
+  ) {}
   public tracks: Track[] = [];
 
   create(createTrackDto: CreateTrackDto) {
@@ -61,6 +70,9 @@ export class TrackService {
         ERROR_MESSAGES.trackNotFound,
         HttpStatus.NOT_FOUND,
       );
+    }
+    if (this.favsService.favs.tracks.includes(id)) {
+      this.favsService.removeTrack(id);
     }
     this.tracks = this.tracks.filter((track) => track.id !== id);
   }
