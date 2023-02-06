@@ -10,10 +10,12 @@ import {
   Put,
   ValidationPipe,
 } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 import { CreateTrackDto } from './dto/create-track.dto';
 import { UpdateTrackDto } from './dto/update-track.dto';
 import { TrackService } from './track.service';
 
+@ApiTags('Tracks')
 @Controller('track')
 export class TrackController {
   constructor(private readonly trackService: TrackService) {}

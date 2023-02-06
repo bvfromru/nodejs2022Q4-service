@@ -10,10 +10,12 @@ import {
   Put,
   ValidationPipe,
 } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 import { AlbumService } from './album.service';
 import { CreateAlbumDto } from './dto/create-album.dto';
 import { UpdateAlbumDto } from './dto/update-album.dto';
 
+@ApiTags('Albums')
 @Controller('album')
 export class AlbumController {
   constructor(private readonly albumService: AlbumService) {}
