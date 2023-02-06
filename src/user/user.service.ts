@@ -20,12 +20,10 @@ export class UserService {
     };
     this.users.push(user);
     return user;
-    // return db.users.create(createUserDto);
   }
 
   findAll() {
     return this.users;
-    // return db.users.findAll();
   }
 
   findOne(id: string) {
@@ -40,7 +38,7 @@ export class UserService {
   }
 
   update(id: string, updatePasswordDto: UpdatePasswordDto) {
-    const user = this.users.find((user) => user.id === id);
+    let user = this.users.find((user) => user.id === id);
 
     if (!user) {
       throw new HttpException(
@@ -49,49 +47,25 @@ export class UserService {
       );
     }
 
-    if (user.password !== updatePasswordDto.oldPassword) {
+    const { oldPassword, newPassword } = updatePasswordDto;
+
+    if (user.password !== oldPassword) {
       throw new HttpException(
         ERROR_MESSAGES.wrongPassword,
         HttpStatus.FORBIDDEN,
       );
     }
 
+    const newVersion = user.version + 1;
     const timestamp = Date.now();
-    user.password = updatePasswordDto.newPassword;
-    user.version = user.version + 1;
-    user.updatedAt = timestamp;
+    user.password = newPassword;
+    user = {
+      ...user,
+      version: newVersion,
+      updatedAt: timestamp,
+    };
     return user;
   }
-
-  // update(id: string, updatePasswordDto: UpdatePasswordDto) {
-  //   let user = this.users.find((user) => user.id === id);
-
-  //   if (!user) {
-  //     throw new HttpException(
-  //       ERROR_MESSAGES.userNotFound,
-  //       HttpStatus.NOT_FOUND,
-  //     );
-  //   }
-
-  //   const { oldPassword, newPassword } = updatePasswordDto;
-
-  //   if (user.password !== oldPassword) {
-  //     throw new HttpException(
-  //       ERROR_MESSAGES.wrongPassword,
-  //       HttpStatus.FORBIDDEN,
-  //     );
-  //   }
-
-  //   const newVersion = user.version + 1;
-  //   const timestamp = Date.now();
-  //   user = {
-  //     ...user,
-  //     password: newPassword,
-  //     version: newVersion,
-  //     updatedAt: timestamp,
-  //   };
-  //   return user;
-  // }
 
   remove(id: string) {
     const user = this.users.find((user) => user.id === id);
