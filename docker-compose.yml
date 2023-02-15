@@ -10,8 +10,16 @@ services:
     environment:
       - PORT=${PORT}
     restart: on-failure
+    networks:
+      - db
   postgres:
     build: ./postgreSQL_db
     ports:
-      - 3001:3001
+      - ${DB_PORT}:${DB_PORT}
+    environment:
+      - DB_PORT=${DB_PORT}
     restart: on-failure
+    networks:
+      - db
+networks:
+  db:
