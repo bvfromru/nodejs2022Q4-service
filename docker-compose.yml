@@ -9,7 +9,9 @@ services:
       - postgres
     environment:
       - PORT=${PORT}
+    restart: on-failure
   postgres:
     build: ./postgreSQL_db
     ports:
       - 3001:3001
+    restart: on-failure
