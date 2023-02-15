@@ -7,7 +7,7 @@ import { DEFAULT_PORT } from './constants';
 
 dotenv.config();
 const PORT = Number(process.env.PORT) || DEFAULT_PORT;
-console.log('fieredsdsddsdsdfdfsfdssdfdfdgваfdfdsddfdsfdfdfrsddt');
+console.log('fieredsdsddsdsdfdfsfdssdffdfdsddfdsfdfdfrsddt');
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, { cors: true });
 

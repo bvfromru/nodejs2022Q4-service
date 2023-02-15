@@ -4,7 +4,8 @@ services:
     ports:
       - ${PORT}:${PORT}
     volumes:
-      - ./src:/usr/app/src
+      - .:/usr/app
+      - exclude:/usr/app/node_modules
     depends_on:
       - postgres
     environment:
@@ -23,3 +24,5 @@ services:
       - db
 networks:
   db:
+volumes:
+  exclude:
