@@ -1,0 +1,15 @@
+services:
+  app:
+    build: .
+    ports:
+      - ${PORT}:${PORT}
+    volumes:
+      - ./src:/usr/app/src
+    depends_on:
+      - postgres
+    environment:
+      - PORT=${PORT}
+  postgres:
+    build: ./postgreSQL_db
+    ports:
+      - 3001:3001

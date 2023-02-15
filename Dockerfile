@@ -1,7 +1,8 @@
 FROM node:18-alpine
+USER root
 WORKDIR /usr/app
 COPY package.json package-lock.json ./
-RUN npm install
+RUN npm ci
 COPY . .
-EXPOSE 3000
-CMD ["npm", "start"]
+EXPOSE ${PORT}
+CMD ["npm", "run", "start:dev"]
