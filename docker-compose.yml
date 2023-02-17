@@ -24,5 +24,6 @@ services:
       - db
 networks:
   db:
+    driver: bridge
 volumes:
   exclude:
