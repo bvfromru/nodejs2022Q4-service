@@ -1,44 +1,51 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { ERROR_MESSAGES } from 'src/constants';
-import { v4 as uuidv4 } from 'uuid';
+import { PrismaService } from 'src/prisma.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdatePasswordDto } from './dto/update-user.dto';
+import { UserEntity } from './entities/user.entity';
 import { User } from './user.interface';
 
 @Injectable()
 export class UserService {
-  private users: User[] = [];
+  constructor(private prisma: PrismaService) {}
 
-  create(createUserDto: CreateUserDto) {
-    const timestamp = Date.now();
+  // private users: User[] = [];
+
+  async create(createUserDto: CreateUserDto) {
+    // const timestamp = Date.now();
     const user: User = {
       ...createUserDto,
-      id: uuidv4(),
-      version: 1,
-      createdAt: timestamp,
-      updatedAt: timestamp,
+      // id: uuidv4(),
+      // version: 1,
+      // createdAt: timestamp,
+      // updatedAt: timestamp,
     };
-    this.users.push(user);
-    return user;
+    const data = await this.prisma.user.create({ data: user });
+    const userEntity = new UserEntity(data);
+    // this.users.push(user);
+    return userEntity;
   }
 
-  findAll() {
-    return this.users;
+  async findAll() {
+    const users = await this.prisma.user.findMany();
+    return users.map((user) => new UserEntity(user));
   }
 
-  findOne(id: string) {
-    const user = this.users.find((user) => user.id === id);
+  async findOne(id: string) {
+    const user = await this.prisma.user.findUnique({ where: { id } });
     if (!user) {
       throw new HttpException(
         ERROR_MESSAGES.userNotFound,
         HttpStatus.NOT_FOUND,
       );
     }
-    return user;
+    const userEntity = new UserEntity(user);
+    return userEntity;
   }
 
-  update(id: string, updatePasswordDto: UpdatePasswordDto) {
-    let user = this.users.find((user) => user.id === id);
+  async update(id: string, updatePasswordDto: UpdatePasswordDto) {
+    let user = await this.prisma.user.findUnique({ where: { id } });
 
     if (!user) {
       throw new HttpException(
@@ -62,19 +69,19 @@ export class UserService {
     user = {
       ...user,
       version: newVersion,
-      updatedAt: timestamp,
+      // updatedAt: timestamp,
     };
     return user;
   }
 
-  remove(id: string) {
-    const user = this.users.find((user) => user.id === id);
-    if (!user) {
+  async remove(id: string) {
+    try {
+      await this.prisma.user.delete({ where: { id } });
+    } catch {
       throw new HttpException(
         ERROR_MESSAGES.userNotFound,
         HttpStatus.NOT_FOUND,
       );
     }
-    this.users = this.users.filter((user) => user.id !== id);
   }
 }

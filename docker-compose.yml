@@ -8,6 +8,7 @@ services:
       - postgres
     environment:
       - PORT=${PORT}
+      - POSTGRES_DB_URL=${POSTGRES_DB_URL}
     volumes:
       - .:/usr/app
       - exclude:/usr/app/node_modules
