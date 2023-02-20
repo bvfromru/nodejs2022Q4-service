@@ -24,26 +24,26 @@ export class FavsService {
   };
 
   findAll() {
-    const albums = this.albumService.findAll();
-    const tracks = this.trackService.findAll();
-    const artists = this.artistService.findAll();
+    // const albums = this.albumService.findAll();
+    // const tracks = this.trackService.findAll();
+    // const artists = this.artistService.findAll();
     return {
       // albums: albums.filter((album) => this.favs.albums.includes(album.id)),
-      tracks: tracks.filter((track) => this.favs.tracks.includes(track.id)),
-      artists: artists.filter((album) => this.favs.artists.includes(album.id)),
+      // tracks: tracks.filter((track) => this.favs.tracks.includes(track.id)),
+      // artists: artists.filter((album) => this.favs.artists.includes(album.id)),
     };
   }
 
   addTrack(id: string) {
-    const tracks = this.trackService.findAll();
-    if (!tracks.find((track) => track.id === id)) {
-      throw new HttpException(
-        ERROR_MESSAGES.trackNotFound,
-        HttpStatus.UNPROCESSABLE_ENTITY,
-      );
-    }
-    this.favs.tracks.push(id);
-    return SUCCESS_MESSAGES.addTrack;
+    // const tracks = this.trackService.findAll();
+    // if (!tracks.find((track) => track.id === id)) {
+    //   throw new HttpException(
+    //     ERROR_MESSAGES.trackNotFound,
+    //     HttpStatus.UNPROCESSABLE_ENTITY,
+    //   );
+    // }
+    // this.favs.tracks.push(id);
+    // return SUCCESS_MESSAGES.addTrack;
   }
 
   removeTrack(id: string) {
@@ -81,15 +81,15 @@ export class FavsService {
   }
 
   addArtist(id: string) {
-    const artists = this.artistService.findAll();
-    if (!artists.find((artist) => artist.id === id)) {
-      throw new HttpException(
-        ERROR_MESSAGES.artistNotFound,
-        HttpStatus.UNPROCESSABLE_ENTITY,
-      );
-    }
-    this.favs.artists.push(id);
-    return SUCCESS_MESSAGES.addArtist;
+    // const artists = this.artistService.findAll();
+    // if (!artists.find((artist) => artist.id === id)) {
+    //   throw new HttpException(
+    //     ERROR_MESSAGES.artistNotFound,
+    //     HttpStatus.UNPROCESSABLE_ENTITY,
+    //   );
+    // }
+    // this.favs.artists.push(id);
+    // return SUCCESS_MESSAGES.addArtist;
   }
 
   removeArtist(id: string) {
