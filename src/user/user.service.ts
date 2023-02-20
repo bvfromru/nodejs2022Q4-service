@@ -1,4 +1,8 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import {
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { ERROR_MESSAGES } from 'src/constants';
 import { PrismaService } from 'src/prisma.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -23,10 +27,7 @@ export class UserService {
   async findOne(id: string) {
     const user = await this.prisma.user.findUnique({ where: { id } });
     if (!user) {
-      throw new HttpException(
-        ERROR_MESSAGES.userNotFound,
-        HttpStatus.NOT_FOUND,
-      );
+      throw new NotFoundException(ERROR_MESSAGES.userNotFound);
     }
     const userEntity = new UserEntity(user);
     return userEntity;
@@ -36,19 +37,13 @@ export class UserService {
     let user = await this.prisma.user.findUnique({ where: { id } });
 
     if (!user) {
-      throw new HttpException(
-        ERROR_MESSAGES.userNotFound,
-        HttpStatus.NOT_FOUND,
-      );
+      throw new NotFoundException(ERROR_MESSAGES.userNotFound);
     }
 
     const { oldPassword, newPassword } = updatePasswordDto;
 
     if (user.password !== oldPassword) {
-      throw new HttpException(
-        ERROR_MESSAGES.wrongPassword,
-        HttpStatus.FORBIDDEN,
-      );
+      throw new ForbiddenException(ERROR_MESSAGES.wrongPassword);
     }
 
     const newVersion = user.version + 1;
@@ -71,10 +66,7 @@ export class UserService {
     try {
       await this.prisma.user.delete({ where: { id } });
     } catch {
-      throw new HttpException(
-        ERROR_MESSAGES.userNotFound,
-        HttpStatus.NOT_FOUND,
-      );
+      throw new NotFoundException(ERROR_MESSAGES.userNotFound);
     }
   }
 }

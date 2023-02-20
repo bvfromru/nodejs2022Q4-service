@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { ERROR_MESSAGES } from 'src/constants';
 import { PrismaService } from 'src/prisma.service';
 import { CreateArtistDto } from './dto/create-artist.dto';
@@ -19,10 +19,7 @@ export class ArtistService {
   async findOne(id: string) {
     const artist = await this.prisma.artist.findUnique({ where: { id } });
     if (!artist) {
-      throw new HttpException(
-        ERROR_MESSAGES.artistNotFound,
-        HttpStatus.NOT_FOUND,
-      );
+      throw new NotFoundException(ERROR_MESSAGES.artistNotFound);
     }
     return artist;
   }
@@ -34,10 +31,7 @@ export class ArtistService {
         data: updateArtistDto,
       });
     } catch {
-      throw new HttpException(
-        ERROR_MESSAGES.artistNotFound,
-        HttpStatus.NOT_FOUND,
-      );
+      throw new NotFoundException(ERROR_MESSAGES.artistNotFound);
     }
   }
 
@@ -45,10 +39,7 @@ export class ArtistService {
     try {
       await this.prisma.artist.delete({ where: { id } });
     } catch {
-      throw new HttpException(
-        ERROR_MESSAGES.artistNotFound,
-        HttpStatus.NOT_FOUND,
-      );
+      throw new NotFoundException(ERROR_MESSAGES.artistNotFound);
     }
   }
 }

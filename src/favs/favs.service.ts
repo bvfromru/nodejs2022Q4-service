@@ -1,4 +1,8 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  UnprocessableEntityException,
+} from '@nestjs/common';
 import { ERROR_MESSAGES } from 'src/constants';
 import { PrismaService } from 'src/prisma.service';
 
@@ -33,10 +37,7 @@ export class FavsService {
     const item = await this.prisma[type].findFirst({ where: { id } });
 
     if (!item) {
-      throw new HttpException(
-        ERROR_MESSAGES.idDoesntExist,
-        HttpStatus.UNPROCESSABLE_ENTITY,
-      );
+      throw new UnprocessableEntityException(ERROR_MESSAGES.idDoesntExist);
     }
 
     const favorites = await this.prisma.favorites.findMany();
@@ -63,7 +64,7 @@ export class FavsService {
         data: { favoriteId: { set: null } },
       });
     } catch (error) {
-      throw new HttpException(ERROR_MESSAGES.idNotFound, HttpStatus.NOT_FOUND);
+      throw new NotFoundException(ERROR_MESSAGES.idNotFound);
     }
   }
 }

@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { ERROR_MESSAGES } from 'src/constants';
 import { PrismaService } from 'src/prisma.service';
 import { CreateAlbumDto } from './dto/create-album.dto';
@@ -19,10 +19,7 @@ export class AlbumService {
   async findOne(id: string) {
     const album = await this.prisma.album.findUnique({ where: { id } });
     if (!album) {
-      throw new HttpException(
-        ERROR_MESSAGES.albumNotFound,
-        HttpStatus.NOT_FOUND,
-      );
+      throw new NotFoundException(ERROR_MESSAGES.albumNotFound);
     }
     return album;
   }
@@ -34,10 +31,7 @@ export class AlbumService {
         data: updateAlbumDto,
       });
     } catch {
-      throw new HttpException(
-        ERROR_MESSAGES.albumNotFound,
-        HttpStatus.NOT_FOUND,
-      );
+      throw new NotFoundException(ERROR_MESSAGES.albumNotFound);
     }
   }
 
@@ -45,10 +39,7 @@ export class AlbumService {
     try {
       await this.prisma.album.delete({ where: { id } });
     } catch {
-      throw new HttpException(
-        ERROR_MESSAGES.albumNotFound,
-        HttpStatus.NOT_FOUND,
-      );
+      throw new NotFoundException(ERROR_MESSAGES.albumNotFound);
     }
   }
 }
