@@ -15,9 +15,10 @@ import { HttpCode } from '@nestjs/common/decorators/http/http-code.decorator';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdatePasswordDto } from './dto/update-user.dto';
+import { UserDateInterceptor } from './user.iterceptor';
 import { UserService } from './user.service';
 
-@UseInterceptors(ClassSerializerInterceptor)
+@UseInterceptors(UserDateInterceptor, ClassSerializerInterceptor)
 @ApiTags('Users')
 @Controller('user')
 export class UserController {

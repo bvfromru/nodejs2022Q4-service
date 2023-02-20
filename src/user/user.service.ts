@@ -64,14 +64,19 @@ export class UserService {
     }
 
     const newVersion = user.version + 1;
-    const timestamp = Date.now();
+    const timestamp = new Date();
     user.password = newPassword;
     user = {
       ...user,
       version: newVersion,
-      // updatedAt: timestamp,
+      updatedAt: timestamp,
     };
-    return user;
+    const userData = await this.prisma.user.update({
+      where: { id },
+      data: user,
+    });
+    const userEntity = new UserEntity(userData);
+    return userEntity;
   }
 
   async remove(id: string) {
