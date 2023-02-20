@@ -28,7 +28,7 @@ export class FavsService {
     const tracks = this.trackService.findAll();
     const artists = this.artistService.findAll();
     return {
-      albums: albums.filter((album) => this.favs.albums.includes(album.id)),
+      // albums: albums.filter((album) => this.favs.albums.includes(album.id)),
       tracks: tracks.filter((track) => this.favs.tracks.includes(track.id)),
       artists: artists.filter((album) => this.favs.artists.includes(album.id)),
     };
@@ -58,13 +58,13 @@ export class FavsService {
   }
 
   addAlbum(id: string) {
-    const albums = this.albumService.findAll();
-    if (!albums.find((album) => album.id === id)) {
-      throw new HttpException(
-        ERROR_MESSAGES.albumNotFound,
-        HttpStatus.UNPROCESSABLE_ENTITY,
-      );
-    }
+    // const albums = this.albumService.findAll();
+    // if (!albums.find((album) => album.id === id)) {
+    //   throw new HttpException(
+    //     ERROR_MESSAGES.albumNotFound,
+    //     HttpStatus.UNPROCESSABLE_ENTITY,
+    //   );
+    // }
     this.favs.albums.push(id);
     return SUCCESS_MESSAGES.addAlbum;
   }

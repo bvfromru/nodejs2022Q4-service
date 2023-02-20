@@ -72,11 +72,11 @@ export class ArtistService {
         HttpStatus.NOT_FOUND,
       );
     }
-    this.albumService.albums.forEach((album) => {
-      if (album.artistId === id) {
-        album.artistId = null;
-      }
-    });
+    // this.albumService.albums.forEach((album) => {
+    //   if (album.artistId === id) {
+    //     album.artistId = null;
+    //   }
+    // });
     this.trackService.tracks.forEach((track) => {
       if (track.artistId === id) {
         track.artistId = null;
