@@ -31,6 +31,15 @@ docker-compose up
 If you have any troubles with Docker, please try to clear all docker images, volumes and containers.
 (Clean / Purge data in Troubleshoot section of Docker Desktop)
 
+## Docker security scans
+
+Please use these commands to scan docker images with snyk
+
+```
+  npm run scan:app
+  npm run scan:postgres
+```
+
 ## Testing
 
 After application running open new terminal and enter:
