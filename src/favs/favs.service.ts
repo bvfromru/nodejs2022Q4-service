@@ -1,105 +1,69 @@
-import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
-import { forwardRef } from '@nestjs/common/utils';
-import { AlbumService } from 'src/album/album.service';
-import { ArtistService } from 'src/artist/artist.service';
-import { ERROR_MESSAGES, SUCCESS_MESSAGES } from 'src/constants';
-import { TrackService } from 'src/track/track.service';
-import { Favorites } from './favs.interface';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { ERROR_MESSAGES } from 'src/constants';
+import { PrismaService } from 'src/prisma.service';
 
 @Injectable()
 export class FavsService {
-  constructor(
-    @Inject(forwardRef(() => AlbumService))
-    private readonly albumService: AlbumService,
-    @Inject(forwardRef(() => ArtistService))
-    private readonly artistService: ArtistService,
-    @Inject(forwardRef(() => TrackService))
-    private readonly trackService: TrackService,
-  ) {}
+  constructor(private prisma: PrismaService) {}
 
-  public favs: Favorites = {
-    artists: [],
-    albums: [],
-    tracks: [],
-  };
-
-  findAll() {
-    // const albums = this.albumService.findAll();
-    // const tracks = this.trackService.findAll();
-    // const artists = this.artistService.findAll();
-    return {
-      // albums: albums.filter((album) => this.favs.albums.includes(album.id)),
-      // tracks: tracks.filter((track) => this.favs.tracks.includes(track.id)),
-      // artists: artists.filter((album) => this.favs.artists.includes(album.id)),
-    };
+  async findAll() {
+    const [item] = await this.prisma.favorites.findMany({
+      select: {
+        albums: {
+          select: { id: true, name: true, year: true, artistId: true },
+        },
+        artists: {
+          select: { id: true, name: true, grammy: true },
+        },
+        tracks: {
+          select: {
+            id: true,
+            name: true,
+            duration: true,
+            artistId: true,
+            albumId: true,
+          },
+        },
+      },
+    });
+    return item;
   }
 
-  addTrack(id: string) {
-    // const tracks = this.trackService.findAll();
-    // if (!tracks.find((track) => track.id === id)) {
-    //   throw new HttpException(
-    //     ERROR_MESSAGES.trackNotFound,
-    //     HttpStatus.UNPROCESSABLE_ENTITY,
-    //   );
-    // }
-    // this.favs.tracks.push(id);
-    // return SUCCESS_MESSAGES.addTrack;
-  }
+  async addItem(type: string, id: string) {
+    const item = await this.prisma[type].findFirst({ where: { id } });
 
-  removeTrack(id: string) {
-    if (!this.favs.tracks.includes(id)) {
+    if (!item) {
       throw new HttpException(
-        ERROR_MESSAGES.trackIsNotFavorite,
-        HttpStatus.NOT_FOUND,
+        ERROR_MESSAGES.idDoesntExist,
+        HttpStatus.UNPROCESSABLE_ENTITY,
       );
     }
-    this.favs.tracks = this.favs.tracks.filter((i) => i !== id);
-    return SUCCESS_MESSAGES.removeTrack;
-  }
 
-  addAlbum(id: string) {
-    // const albums = this.albumService.findAll();
-    // if (!albums.find((album) => album.id === id)) {
-    //   throw new HttpException(
-    //     ERROR_MESSAGES.albumNotFound,
-    //     HttpStatus.UNPROCESSABLE_ENTITY,
-    //   );
-    // }
-    this.favs.albums.push(id);
-    return SUCCESS_MESSAGES.addAlbum;
-  }
+    const favorites = await this.prisma.favorites.findMany();
 
-  removeAlbum(id: string) {
-    if (!this.favs.albums.includes(id)) {
-      throw new HttpException(
-        ERROR_MESSAGES.albumIsNotFavorite,
-        HttpStatus.NOT_FOUND,
-      );
+    if (!favorites.length) {
+      const createdFavs = await this.prisma.favorites.create({ data: {} });
+      await this.prisma[type].update({
+        where: { id },
+        data: { favoriteId: createdFavs.id },
+      });
+    } else {
+      await this.prisma[type].update({
+        where: { id },
+        data: { favoriteId: favorites[0].id },
+      });
     }
-    this.favs.albums = this.favs.albums.filter((i) => i !== id);
-    return SUCCESS_MESSAGES.removeAlbum;
+    return item;
   }
 
-  addArtist(id: string) {
-    // const artists = this.artistService.findAll();
-    // if (!artists.find((artist) => artist.id === id)) {
-    //   throw new HttpException(
-    //     ERROR_MESSAGES.artistNotFound,
-    //     HttpStatus.UNPROCESSABLE_ENTITY,
-    //   );
-    // }
-    // this.favs.artists.push(id);
-    // return SUCCESS_MESSAGES.addArtist;
-  }
-
-  removeArtist(id: string) {
-    if (!this.favs.artists.includes(id)) {
-      throw new HttpException(
-        ERROR_MESSAGES.artistIsNotFavorite,
-        HttpStatus.NOT_FOUND,
-      );
+  async removeItem(type: string, id: string) {
+    try {
+      await this.prisma[type].update({
+        where: { id },
+        data: { favoriteId: { set: null } },
+      });
+    } catch (error) {
+      throw new HttpException(ERROR_MESSAGES.idNotFound, HttpStatus.NOT_FOUND);
     }
-    this.favs.artists = this.favs.artists.filter((i) => i !== id);
-    return SUCCESS_MESSAGES.removeArtist;
   }
 }

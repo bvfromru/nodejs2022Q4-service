@@ -29,9 +29,15 @@ export class AlbumService {
 
   async update(id: string, updateAlbumDto: UpdateAlbumDto) {
     try {
-      await this.prisma.album.update({ where: { id }, data: updateAlbumDto });
+      return await this.prisma.album.update({
+        where: { id },
+        data: updateAlbumDto,
+      });
     } catch {
-      new HttpException(ERROR_MESSAGES.albumNotFound, HttpStatus.NOT_FOUND);
+      throw new HttpException(
+        ERROR_MESSAGES.albumNotFound,
+        HttpStatus.NOT_FOUND,
+      );
     }
   }
 

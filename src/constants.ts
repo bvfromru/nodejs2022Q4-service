@@ -10,6 +10,8 @@ export const ERROR_MESSAGES = {
   trackIsNotFavorite: "Track wasn't add to Favorites",
   albumIsNotFavorite: "Album wasn't add to Favorites",
   artistIsNotFavorite: "Artist wasn't add to Favorites",
+  idDoesntExist: "This ID doesn't exist",
+  idNotFound: 'ID not found',
 };
 
 export const SUCCESS_MESSAGES = {

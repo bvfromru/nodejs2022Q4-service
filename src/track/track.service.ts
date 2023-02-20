@@ -8,23 +8,7 @@ import { UpdateTrackDto } from './dto/update-track.dto';
 export class TrackService {
   constructor(private prisma: PrismaService) {}
 
-  // constructor(
-  //   @Inject(forwardRef(() => ArtistService))
-  //   private readonly artistService: ArtistService,
-  //   @Inject(forwardRef(() => FavsService))
-  //   private readonly favsService: FavsService,
-  //   @Inject(forwardRef(() => AlbumService))
-  //   private readonly albumService: AlbumService,
-  // ) {}
-  // public tracks: Track[] = [];
-
   async create(createTrackDto: CreateTrackDto) {
-    // const track: Track = {
-    //   ...createTrackDto,
-    //   id: uuidv4(),
-    // };
-    // this.tracks.push(track);
-    // return track;
     return await this.prisma.track.create({ data: createTrackDto });
   }
 
@@ -40,7 +24,6 @@ export class TrackService {
         HttpStatus.NOT_FOUND,
       );
     }
-    // const track = await this.prisma.track.
     return track;
   }
 
@@ -56,11 +39,6 @@ export class TrackService {
         HttpStatus.NOT_FOUND,
       );
     }
-    // let track = await this.tracks.find((track) => track.id === id);
-    // if (!track) {
-    // }
-    // track = { ...track, ...updateTrackDto };
-    // return track;
   }
 
   async remove(id: string) {
@@ -72,12 +50,5 @@ export class TrackService {
         HttpStatus.NOT_FOUND,
       );
     }
-    // const track = await this.tracks.find((track) => track.id === id);
-    // if (!track) {
-    // }
-    // if (this.favsService.favs.tracks.includes(id)) {
-    //   this.favsService.removeTrack(id);
-    // }
-    // this.tracks = this.tracks.filter((track) => track.id !== id);
   }
 }

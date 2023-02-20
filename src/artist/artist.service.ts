@@ -8,21 +8,7 @@ import { UpdateArtistDto } from './dto/update-artist.dto';
 export class ArtistService {
   constructor(private prisma: PrismaService) {}
 
-  // constructor(
-  //   @Inject(forwardRef(() => AlbumService))
-  //   private readonly albumService: AlbumService,
-  //   @Inject(forwardRef(() => TrackService))
-  //   private readonly trackService: TrackService,
-  //   @Inject(forwardRef(() => FavsService))
-  //   private readonly favsService: FavsService,
-  // ) {}
-  // public artists: Artist[] = [];
-
   async create(createArtistDto: CreateArtistDto) {
-    // const artist: Artist = {
-    //   ...createArtistDto,
-    //   id: uuidv4(),
-    // };
     return await this.prisma.artist.create({ data: createArtistDto });
   }
 
@@ -53,17 +39,9 @@ export class ArtistService {
         HttpStatus.NOT_FOUND,
       );
     }
-    // let artist = await this.artists.find((artist) => artist.id === id);
-
-    // if (!artist) {
-    // }
-    // const { name, grammy } = updateArtistDto;
-    // artist = { ...artist, name, grammy };
-    // return artist;
   }
 
   async remove(id: string) {
-    // const artist = await this.artists.find((artist) => artist.id === id);
     try {
       await this.prisma.artist.delete({ where: { id } });
     } catch {
@@ -72,21 +50,5 @@ export class ArtistService {
         HttpStatus.NOT_FOUND,
       );
     }
-    // if (!artist) {
-    // }
-    // this.albumService.albums.forEach((album) => {
-    //   if (album.artistId === id) {
-    //     album.artistId = null;
-    //   }
-    // });
-    // this.trackService.tracks.forEach((track) => {
-    //   if (track.artistId === id) {
-    //     track.artistId = null;
-    //   }
-    // });
-    // if (this.favsService.favs.artists.includes(id)) {
-    //   this.favsService.removeArtist(id);
-    // }
-    // this.artists = this.artists.filter((artist) => artist.id !== id);
   }
 }
