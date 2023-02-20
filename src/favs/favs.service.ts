@@ -30,6 +30,14 @@ export class FavsService {
         },
       },
     });
+
+    if (!item) {
+      return {
+        albums: [],
+        artists: [],
+        tracks: [],
+      };
+    }
     return item;
   }
 

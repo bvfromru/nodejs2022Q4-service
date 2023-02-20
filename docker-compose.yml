@@ -16,7 +16,7 @@ services:
     networks:
       - db
   postgres:
-    # image: postgres
+    image: postgres
     build: ./database
     container_name: postgres
     ports:
