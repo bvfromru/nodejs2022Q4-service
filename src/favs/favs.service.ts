@@ -11,7 +11,7 @@ export class FavsService {
   constructor(private prisma: PrismaService) {}
 
   async findAll() {
-    const [item] = await this.prisma.favorites.findMany({
+    const item = await this.prisma.favorites.findFirst({
       select: {
         albums: {
           select: { id: true, name: true, year: true, artistId: true },

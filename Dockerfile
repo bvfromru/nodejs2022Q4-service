@@ -7,4 +7,4 @@ COPY ./prisma prisma
 RUN npx prisma generate
 COPY . .
 EXPOSE ${PORT}
-CMD ["npm", "run", "start:dev"]
+CMD ["npm", "run", "start:migrate:dev"]
