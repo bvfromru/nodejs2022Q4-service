@@ -15,34 +15,34 @@ export class FavsController {
 
   @Post('track/:id')
   addTrack(@Param('id', ParseUUIDPipe) id: string) {
-    return this.favsService.addTrack(id);
+    return this.favsService.addItem('track', id);
   }
 
   @Delete('track/:id')
   @HttpCode(204)
   removeTrack(@Param('id', ParseUUIDPipe) id: string) {
-    return this.favsService.removeTrack(id);
+    return this.favsService.removeItem('track', id);
   }
 
   @Post('album/:id')
   addAlbum(@Param('id', ParseUUIDPipe) id: string) {
-    return this.favsService.addAlbum(id);
+    return this.favsService.addItem('album', id);
   }
 
   @Delete('album/:id')
   @HttpCode(204)
   removeAlbum(@Param('id', ParseUUIDPipe) id: string) {
-    return this.favsService.removeAlbum(id);
+    return this.favsService.removeItem('album', id);
   }
 
   @Post('artist/:id')
   addArtist(@Param('id', ParseUUIDPipe) id: string) {
-    return this.favsService.addArtist(id);
+    return this.favsService.addItem('artist', id);
   }
 
   @Delete('artist/:id')
   @HttpCode(204)
   removeArtist(@Param('id', ParseUUIDPipe) id: string) {
-    return this.favsService.removeArtist(id);
+    return this.favsService.removeItem('artist', id);
   }
 }

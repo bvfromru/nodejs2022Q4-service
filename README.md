@@ -8,24 +8,37 @@
 ## Downloading
 
 ```
-git clone {repository URL}
+git clone https://github.com/bvfromru/nodejs2022Q4-service.git nodejs2022Q4-service
 ```
 
-## Installing NPM modules
+## Switching to development branch and Installing NPM modules
 
 ```
+cd nodejs2022Q4-service
+git checkout dev-part2
 npm install
 ```
 
 ## Running application
 
+Rename file `.env.example` to `.env`
+Run Docker Desktop and wait for the docker service to start
+
 ```
-npm start
+docker-compose up
 ```
 
-After starting the app on port (4000 as default) you can open
-in your browser OpenAPI documentation by typing http://localhost:4000/doc/.
-For more information about OpenAPI/Swagger please visit https://swagger.io/.
+If you have any troubles with Docker, please try to clear all docker images, volumes and containers.
+(Clean / Purge data in Troubleshoot section of Docker Desktop)
+
+## Docker security scans
+
+Please use these commands to scan docker images with snyk
+
+```
+  npm run scan:app
+  npm run scan:postgres
+```
 
 ## Testing
 
@@ -54,19 +67,3 @@ To run only specific test suite with authorization
 ```
 npm run test:auth -- <path to suite>
 ```
-
-### Auto-fix and format
-
-```
-npm run lint
-```
-
-```
-npm run format
-```
-
-### Debugging in VSCode
-
-Press <kbd>F5</kbd> to debug.
-
-For more information, visit: https://code.visualstudio.com/docs/editor/debugging
