@@ -6,6 +6,7 @@ export class UserEntity {
   version: number;
   createdAt: Date;
   updatedAt: Date;
+  refreshToken: string;
 
   @Exclude()
   password: string;

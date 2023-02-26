@@ -12,6 +12,7 @@ export const ERROR_MESSAGES = {
   artistIsNotFavorite: "Artist wasn't add to Favorites",
   idDoesntExist: "This ID doesn't exist",
   idNotFound: 'ID not found',
+  userAlreadyExists: 'User already exists',
 };
 
 export const SUCCESS_MESSAGES = {

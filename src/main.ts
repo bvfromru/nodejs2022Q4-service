@@ -2,11 +2,17 @@ import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder } from '@nestjs/swagger';
 import { SwaggerModule } from '@nestjs/swagger/dist';
 import * as dotenv from 'dotenv';
+import { DEFAULT_PORT } from '../utils/constants';
 import { AppModule } from './app.module';
-import { DEFAULT_PORT } from './constants';
 
 dotenv.config();
 const PORT = Number(process.env.PORT) || DEFAULT_PORT;
+export const CRYPT_SALT = 10;
+export const JWT_SECRET_REFRESH_KEY = process.env.JWT_SECRET_REFRESH_KEY;
+export const JWT_SECRET_KEY = process.env.JWT_SECRET_KEY;
+export const TOKEN_EXPIRE_TIME = '1h';
+export const TOKEN_REFRESH_EXPIRE_TIME = '24h';
+
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, { cors: true });
 
