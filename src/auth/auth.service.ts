@@ -6,10 +6,10 @@ import {
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
-import { CRYPT_SALT } from 'src/main';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { UserService } from 'src/user/user.service';
 import { ERROR_MESSAGES } from 'src/utils/constants';
+import { hashData } from 'src/utils/helpers';
 import { LoginAuthDto } from './dto/login-auth.dto';
 import { RefreshAuthDto } from './dto/refresh-auth.dto';
 import { SignupAuthDto } from './dto/signup-auth.dto';
@@ -26,7 +26,7 @@ export class AuthService {
   async signup(signupAuthDto: SignupAuthDto) {
     const { password } = signupAuthDto;
 
-    const hash = await this.hashData(password);
+    const hash = await hashData(password);
     return await this.userService.create({
       ...signupAuthDto,
       password: hash,
@@ -40,8 +40,9 @@ export class AuthService {
     });
     if (!user) throw new BadRequestException(ERROR_MESSAGES.authDataIncorrect);
     const passwordMatches = await bcrypt.compare(password, user.password);
-    if (!passwordMatches)
+    if (!passwordMatches) {
       throw new BadRequestException(ERROR_MESSAGES.authDataIncorrect);
+    }
     const tokens = await this.getTokens(user.id, user.login);
     await this.updateRefreshToken(user.id, tokens.refreshToken);
     return tokens;
@@ -70,10 +71,8 @@ export class AuthService {
     return tokens;
   }
 
-  private hashData = async (data: string) => bcrypt.hash(data, CRYPT_SALT);
-
   async updateRefreshToken(id: string, refreshToken: string) {
-    const hashedRefreshToken = await this.hashData(refreshToken);
+    const hashedRefreshToken = await hashData(refreshToken);
     await this.prisma.user.update({
       where: { id },
       data: { refreshToken: hashedRefreshToken },
