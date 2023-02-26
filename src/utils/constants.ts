@@ -14,6 +14,7 @@ export const ERROR_MESSAGES = {
   idNotFound: 'ID not found',
   userAlreadyExists: 'User already exists',
   authDataIncorrect: 'Login or password is incorrect',
+  accessDenied: 'Access denied',
 };
 
 export const SUCCESS_MESSAGES = {
