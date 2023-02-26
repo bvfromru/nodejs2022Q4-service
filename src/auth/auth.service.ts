@@ -46,11 +46,11 @@ export class AuthService {
   async refresh(refreshAuthDto: RefreshAuthDto) {
     const { refreshToken } = refreshAuthDto;
     const decodedToken = this.jwtService.decode(refreshToken) as {
-      id: string;
+      userId: string;
       login: string;
     };
     const user = await this.prisma.user.findUnique({
-      where: { id: decodedToken.id },
+      where: { id: decodedToken.userId },
     });
     const tokens = await this.getTokens(user.id, user.login);
     await this.updateRefreshToken(user.id, tokens.refreshToken);
@@ -67,11 +67,11 @@ export class AuthService {
     });
   }
 
-  async getTokens(id: string, login: string) {
+  async getTokens(userId: string, login: string) {
     const [accessToken, refreshToken] = await Promise.all([
       this.jwtService.signAsync(
         {
-          id,
+          userId,
           login,
         },
         {
@@ -81,7 +81,7 @@ export class AuthService {
       ),
       this.jwtService.signAsync(
         {
-          id,
+          userId,
           login,
         },
         {
