@@ -13,6 +13,7 @@ export const ERROR_MESSAGES = {
   idDoesntExist: "This ID doesn't exist",
   idNotFound: 'ID not found',
   userAlreadyExists: 'User already exists',
+  authDataIncorrect: 'Login or password is incorrect',
 };
 
 export const SUCCESS_MESSAGES = {

@@ -1,4 +1,5 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { CRYPT_SALT } from 'src/main';
@@ -14,18 +15,12 @@ export class AuthService {
   constructor(
     private userService: UserService,
     private jwtService: JwtService,
-    // private configService: ConfigService,
+    private configService: ConfigService,
     private prisma: PrismaService,
   ) {}
 
   async signup(signupAuthDto: SignupAuthDto) {
-    const { login, password } = signupAuthDto;
-    const userExists = await this.prisma.user.findFirst({
-      where: { login },
-    });
-    if (userExists) {
-      throw new BadRequestException(ERROR_MESSAGES.userAlreadyExists);
-    }
+    const { password } = signupAuthDto;
 
     const hash = await this.hashData(password);
     return await this.userService.create({
@@ -35,50 +30,72 @@ export class AuthService {
   }
 
   async login(loginAuthDto: LoginAuthDto) {
-    return `This action returns all auth`;
+    const { login, password } = loginAuthDto;
+    const user = await this.prisma.user.findFirst({
+      where: { login },
+    });
+    if (!user) throw new BadRequestException(ERROR_MESSAGES.authDataIncorrect);
+    const passwordMatches = await bcrypt.compare(password, user.password);
+    if (!passwordMatches)
+      throw new BadRequestException(ERROR_MESSAGES.authDataIncorrect);
+    const tokens = await this.getTokens(user.id, user.login);
+    await this.updateRefreshToken(user.id, tokens.refreshToken);
+    return tokens;
   }
 
   async refresh(refreshAuthDto: RefreshAuthDto) {
-    return `This action returns a auth`;
+    const { refreshToken } = refreshAuthDto;
+    const decodedToken = this.jwtService.decode(refreshToken) as {
+      id: string;
+      login: string;
+    };
+    const user = await this.prisma.user.findUnique({
+      where: { id: decodedToken.id },
+    });
+    const tokens = await this.getTokens(user.id, user.login);
+    await this.updateRefreshToken(user.id, tokens.refreshToken);
+    return tokens;
   }
 
   private hashData = async (data: string) => bcrypt.hash(data, CRYPT_SALT);
 
   async updateRefreshToken(id: string, refreshToken: string) {
     const hashedRefreshToken = await this.hashData(refreshToken);
-    // await this.prisma.user.update({
-    //   where: { id },
-    //   data: { refreshToken: hashedRefreshToken },
-    // });
+    await this.prisma.user.update({
+      where: { id },
+      data: { refreshToken: hashedRefreshToken },
+    });
   }
 
-  // async getTokens(userId: string, login: string) {
-  //   const [accessToken, refreshToken] = await Promise.all([
-  //     this.jwtService.signAsync(
-  //       {
-  //         sub: userId,
-  //         login,
-  //       },
-  //       {
-  //         secret: this.configService.get<string>('JWT_ACCESS_SECRET'),
-  //         expiresIn: '15m',
-  //       },
-  //     ),
-  //     this.jwtService.signAsync(
-  //       {
-  //         sub: userId,
-  //         login,
-  //       },
-  //       {
-  //         secret: this.configService.get<string>('JWT_REFRESH_SECRET'),
-  //         expiresIn: '7d',
-  //       },
-  //     ),
-  //   ]);
+  async getTokens(id: string, login: string) {
+    const [accessToken, refreshToken] = await Promise.all([
+      this.jwtService.signAsync(
+        {
+          id,
+          login,
+        },
+        {
+          secret: this.configService.get<string>('JWT_SECRET_KEY'),
+          expiresIn: this.configService.get<string>('TOKEN_EXPIRE_TIME'),
+        },
+      ),
+      this.jwtService.signAsync(
+        {
+          id,
+          login,
+        },
+        {
+          secret: this.configService.get<string>('JWT_SECRET_REFRESH_KEY'),
+          expiresIn: this.configService.get<string>(
+            'TOKEN_REFRESH_EXPIRE_TIME',
+          ),
+        },
+      ),
+    ]);
 
-  //   return {
-  //     accessToken,
-  //     refreshToken,
-  //   };
-  // }
+    return {
+      accessToken,
+      refreshToken,
+    };
+  }
 }

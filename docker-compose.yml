@@ -12,8 +12,7 @@ services:
     volumes:
       - .:/usr/app
       - exclude:/usr/app/node_modules
-      - exclude_dist:/usr/app/dist
-    restart: on-failure
+    restart: always
     networks:
       - db
   postgres:
@@ -40,6 +39,5 @@ networks:
 
 volumes:
   exclude:
-  exclude_dist:
   postgres_logs:
   postgres_data:
