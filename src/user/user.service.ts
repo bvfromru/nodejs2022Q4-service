@@ -3,8 +3,8 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { PrismaService } from 'src/prisma.service';
-import { ERROR_MESSAGES } from 'utils/constants';
+import { PrismaService } from 'src/prisma/prisma.service';
+import { ERROR_MESSAGES } from 'src/utils/constants';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdatePasswordDto } from './dto/update-user.dto';
 import { UserEntity } from './entities/user.entity';

@@ -2,8 +2,8 @@ import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder } from '@nestjs/swagger';
 import { SwaggerModule } from '@nestjs/swagger/dist';
 import * as dotenv from 'dotenv';
-import { DEFAULT_PORT } from '../utils/constants';
 import { AppModule } from './app.module';
+import { DEFAULT_PORT } from './utils/constants';
 
 dotenv.config();
 const PORT = Number(process.env.PORT) || DEFAULT_PORT;
