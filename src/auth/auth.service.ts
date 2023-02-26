@@ -24,13 +24,7 @@ export class AuthService {
   ) {}
 
   async signup(signupAuthDto: SignupAuthDto) {
-    const { password } = signupAuthDto;
-
-    const hash = await hashData(password);
-    return await this.userService.create({
-      ...signupAuthDto,
-      password: hash,
-    });
+    return await this.userService.create(signupAuthDto);
   }
 
   async login(loginAuthDto: LoginAuthDto) {

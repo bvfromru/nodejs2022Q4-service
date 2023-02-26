@@ -1,5 +1,4 @@
 import {
-  BadRequestException,
   ForbiddenException,
   Injectable,
   NotFoundException,
@@ -18,13 +17,16 @@ export class UserService {
 
   async create(createUserDto: CreateUserDto) {
     const { login, password } = createUserDto;
-    const userExists = await this.prisma.user.findFirst({
-      where: { login },
+    // const userExists = await this.prisma.user.findFirst({
+    //   where: { login },
+    // });
+    // if (userExists) {
+    //   throw new BadRequestException(ERROR_MESSAGES.userAlreadyExists);
+    // }
+    const hash = await hashData(password);
+    const data = await this.prisma.user.create({
+      data: { ...createUserDto, password: hash },
     });
-    if (userExists) {
-      throw new BadRequestException(ERROR_MESSAGES.userAlreadyExists);
-    }
-    const data = await this.prisma.user.create({ data: createUserDto });
     const userEntity = new UserEntity(data);
     return userEntity;
   }
