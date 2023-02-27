@@ -4,8 +4,8 @@ import { ExtractJwt, Strategy } from 'passport-jwt';
 import { JWT_SECRET_KEY } from 'src/main';
 
 type JwtPayload = {
-  sub: string;
-  username: string;
+  userId: string;
+  login: string;
 };
 
 @Injectable()

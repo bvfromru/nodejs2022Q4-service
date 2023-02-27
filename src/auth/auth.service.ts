@@ -44,25 +44,29 @@ export class AuthService {
 
   async refresh(refreshAuthDto: RefreshAuthDto) {
     const { refreshToken } = refreshAuthDto;
-    const decodedToken = this.jwtService.decode(refreshToken) as {
-      userId: string;
-      login: string;
-    };
-    const user = await this.prisma.user.findUnique({
-      where: { id: decodedToken.userId },
-    });
-    if (!user || !user.refreshToken) {
+    try {
+      const decodedToken = this.jwtService.decode(refreshToken) as {
+        userId: string;
+        login: string;
+      };
+      const user = await this.prisma.user.findUnique({
+        where: { id: decodedToken.userId },
+      });
+      if (!user || !user.refreshToken) {
+        throw new ForbiddenException(ERROR_MESSAGES.accessDenied);
+      }
+      const refreshTokenMatches = await bcrypt.compare(
+        refreshToken,
+        user.refreshToken,
+      );
+      if (!refreshTokenMatches)
+        throw new ForbiddenException(ERROR_MESSAGES.accessDenied);
+      const tokens = await this.getTokens(user.id, user.login);
+      await this.updateRefreshToken(user.id, tokens.refreshToken);
+      return tokens;
+    } catch {
       throw new ForbiddenException(ERROR_MESSAGES.accessDenied);
     }
-    const refreshTokenMatches = await bcrypt.compare(
-      refreshToken,
-      user.refreshToken,
-    );
-    if (!refreshTokenMatches)
-      throw new ForbiddenException(ERROR_MESSAGES.accessDenied);
-    const tokens = await this.getTokens(user.id, user.login);
-    await this.updateRefreshToken(user.id, tokens.refreshToken);
-    return tokens;
   }
 
   async updateRefreshToken(id: string, refreshToken: string) {
