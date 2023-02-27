@@ -44,19 +44,7 @@ Please use these commands to scan docker images with snyk
 
 After application running open new terminal and enter:
 
-To run all tests without authorization
-
-```
-npm run test
-```
-
-To run only one of all test suites
-
-```
-npm run test -- <path to suite>
-```
-
-To run all test with authorization
+To run all tests with authorization checks please use command
 
 ```
 npm run test:auth
