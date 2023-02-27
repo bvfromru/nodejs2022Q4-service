@@ -15,14 +15,15 @@ git clone https://github.com/bvfromru/nodejs2022Q4-service.git nodejs2022Q4-serv
 
 ```
 cd nodejs2022Q4-service
-git checkout dev-part2
+git checkout dev-part3
 npm install
 ```
 
 ## Running application
 
 Rename file `.env.example` to `.env`
-Run Docker Desktop and wait for the docker service to start
+Run Docker Desktop and wait for the docker service to start.
+To run docker containers please use command:
 
 ```
 docker-compose up
