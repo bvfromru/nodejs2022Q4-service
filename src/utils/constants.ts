@@ -4,6 +4,7 @@ export const IS_PUBLIC_KEY = 'isPublic';
 export const Public = () => SetMetadata(IS_PUBLIC_KEY, true);
 
 export const DEFAULT_PORT = 4000;
+export const DEFAULT_LOGGER_LEVEL = 2;
 
 export const ERROR_MESSAGES = {
   invalidID: 'Invalid ID',
