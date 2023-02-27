@@ -4,6 +4,7 @@ import {
   Controller,
   Post,
   UseInterceptors,
+  ValidationPipe,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { Public } from 'src/utils/constants';
@@ -19,17 +20,17 @@ export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Post('signup')
-  signup(@Body() signupAuthDto: SignupAuthDto) {
+  signup(@Body(new ValidationPipe()) signupAuthDto: SignupAuthDto) {
     return this.authService.signup(signupAuthDto);
   }
 
   @Post('login')
-  login(@Body() loginAuthDto: LoginAuthDto) {
+  login(@Body(new ValidationPipe()) loginAuthDto: LoginAuthDto) {
     return this.authService.login(loginAuthDto);
   }
 
   @Post('refresh')
-  refresh(@Body() refreshAuthDto: RefreshAuthDto) {
+  refresh(@Body(new ValidationPipe()) refreshAuthDto: RefreshAuthDto) {
     return this.authService.refresh(refreshAuthDto);
   }
 }
