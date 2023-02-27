@@ -31,7 +31,19 @@ async function bootstrap() {
   SwaggerModule.setup('doc', app, document);
 
   const config = app.get(ConfigService);
-  app.useLogger(new CustomLogger(config));
+  const logger = new CustomLogger(config);
+
+  app.useLogger(logger);
+
+  process.on('uncaughtException', (err, origin) => {
+    logger.error(`Caught exception: ${err}. Exception origin: ${origin}.`);
+    process.exit(1);
+  });
+
+  process.on('unhandledRejection', (reason, promise) => {
+    logger.error(`Unhandled Rejection at promise. ${reason}`);
+  });
+
   await app.listen(PORT);
 }
 bootstrap();
