@@ -13,7 +13,8 @@ export class LoggerMiddleware implements NestMiddleware {
 
     res.on('finish', () => {
       const { statusCode, statusMessage } = res;
-      const message = `Method: ${method}; URL: ${url}; Query: ${JSON.stringify(
+      const time = new Date().getTime();
+      const message = `Time: ${time}; Method: ${method}; URL: ${url}; Query: ${JSON.stringify(
         query,
       )}; Body: ${JSON.stringify(
         body,

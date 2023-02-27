@@ -5,6 +5,9 @@ export const Public = () => SetMetadata(IS_PUBLIC_KEY, true);
 
 export const DEFAULT_PORT = 4000;
 export const DEFAULT_LOGGER_LEVEL = 2;
+export const DEFAULT_MAX_FILE_SIZE_KB = 10;
+export const LOG_DIR = 'LOGS';
+export const LOG_ERR_DIR = 'LOGS_ERR';
 
 export const ERROR_MESSAGES = {
   invalidID: 'Invalid ID',

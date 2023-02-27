@@ -3,6 +3,8 @@
 # compiled output
 /dist
 /node_modules
+/LOGS
+/LOGS_ERR
 
 # Logs
 logs
