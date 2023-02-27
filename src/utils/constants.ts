@@ -20,6 +20,7 @@ export const ERROR_MESSAGES = {
   userAlreadyExists: 'User already exists',
   authDataIncorrect: 'Login or password is incorrect',
   accessDenied: 'Access denied',
+  serverError: 'Internal server error',
 };
 
 export const SUCCESS_MESSAGES = {
